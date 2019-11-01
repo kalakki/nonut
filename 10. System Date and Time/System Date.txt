@@ -1,0 +1,51 @@
+System Date
+.model small
+.data
+.code
+start: mov ax, @data
+mov ds, ax
+date: mov ah, 2ah
+int 21h
+mov al, dl
+aam
+mov bx, ax
+call disp
+mov dl,'/'
+mov ah, 02h
+int 21h
+month: mov ah, 2ah
+int 21h
+mov al, dh
+aam
+mov bx, ax
+call disp
+mov dl,'/'
+mov ah, 02h
+int 21h
+year: mov ah, 2ah
+int 21h
+mov al, 14h
+aam
+mov bx, ax
+call disp
+mov ah, 2ah
+int 21h
+add cx, 0f830h
+mov al, cl
+aam
+mov bx, ax
+call disp
+mov ah, 4ch
+int 21h
+disp proc
+mov dl, bh
+add dl, 30h
+mov ah, 02h
+int 21h
+mov dl, bl
+add dl, 30h
+mov ah, 02h
+int 21h
+ret
+disp endp
+end start

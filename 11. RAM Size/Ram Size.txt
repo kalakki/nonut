@@ -1,0 +1,59 @@
+RAM Size
+cr equ 0dh
+lf equ 0ah
+data segment
+table db '0123456789abcdef'
+message db ' this program is used to find the size of the ram memory in kbytes'
+db ' memory size is returned in ax register'
+db cr,lf, '$'
+memorysize dw ?
+displaysize db ' the ram memory size is:'
+asciisize db 4 dup(?)
+db cr,lf,'$'
+data ends
+code segment
+assume cs:code, ds:data
+start: mov ax, data
+mov ds,ax
+mov ah,09h
+lea dx,message
+int 21h
+mov ah,088h
+int 15h
+mov memorysize, ax
+lea si, asciisize
+add si,3
+lea bx, table
+mov ax, memorysize
+and ax,0000fh
+xlat
+mov [si],al
+dec si
+mov ax, memorysize
+and ax,000f0h
+mov cl,04h
+shr ax,cl
+xlat
+mov [si],al
+dec si
+mov ax, memorysize
+and ax,00f00h
+mov cl,08h
+shr ax,cl
+xlat
+mov [si],al
+dec si
+mov ax, memorysize
+and ax,0f000h
+mov cl,0ch
+shr ax,cl
+xlat
+mov [si],al
+mov ah,09h
+lea dx, displaysize
+int 21h
+quit: mov al,0
+mov ah,04ch
+int 21h
+code ends
+end start

@@ -1,0 +1,47 @@
+Lowercase to Uppercase Conversion
+cr equ 0dh
+lf equ 0ah
+data segment
+message2 db cr,lf,' the translatedstring:','$'
+table db 48 dup(' '), '0123456789', 7 dup(' ')
+db 'abcdefghijklmnopqrstuvwxyz', 6 dup(' ')
+db 'abcdefghijklmnopqrstuvwxyz', 133 dup(' ')
+namepar label byte
+maxlen db 0ah
+actlen db ?
+string db 0ffh dup('$')
+db cr,lf.'$'
+message1 db cr,lf,'enter string:$'
+data ends
+code segment
+assume cs:code, ds:data
+start: mov ax,data
+mov ds,ax
+mov es,ax
+mov ah,09h
+lea dx,message1
+int 21h
+mov ah,0ah
+lea dx, namepar
+int 21h
+lea si,string
+lea di,string
+lea bx,table
+mov ch,000h
+mov cl,actlen
+cld
+top: lodsb
+xlat
+stosb
+loop top
+mov ah,09h
+lea dx, message2
+int 21h
+mov ah,09h
+lea dx, string
+int 21h
+quit: mov al,0
+mov ah,04ch
+int 21h
+code ends
+end start
